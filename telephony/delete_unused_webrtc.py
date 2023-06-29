@@ -27,7 +27,7 @@ def delete_phone(id):
 
 
 def delete_unused_webrtc_phones(page):
-    PAGE_SIZE = "100"
+    PAGE_SIZE = "5"
     """Delete all of the unassigned WebRTC Phones in the Genesys Cloud org"""
     
     # Query all Phones
@@ -51,7 +51,7 @@ def delete_unused_webrtc_phones(page):
         print('Successfully deleted all unused WebRTC phones.')
     else:
         print('No phones to delete.')
-    return _execute('jq -r ".entities | length"', phones) == PAGE_SIZE
+    return PAGE_SIZE in _execute('jq -r ".entities | length"', phones)
 
 
 def main():
