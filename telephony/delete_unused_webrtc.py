@@ -26,14 +26,16 @@ def delete_phone(id):
     print(f"Deleted WebRTC Phone: {id}")
 
 
-def delete_unused_webrtc_phones():
+def delete_unused_webrtc_phones(page):
+    PAGE_SIZE = "100"
     """Delete all of the unassigned WebRTC Phones in the Genesys Cloud org"""
     
     # Query all Phones
-    phones = _execute('gc telephony providers edges phones list -a --fields webRtcUser')
+    phones = _execute(f"gc telephony providers edges phones list --pageNumber {page} --pageSize {PAGE_SIZE} --fields webRtcUser")
+    print(phones)
     # Perform JSON transformations using JQ
     unused_webrtc_ids_str = _execute(
-        'jq -r ".[] | select(.phoneMetaBase.id == \\"inin_webrtc_softphone.json\\") | select(has(\\"webRtcUser\\") | not) | .id"',
+        'jq -r ".entities[] | select(.phoneMetaBase.id == \\"inin_webrtc_softphone.json\\") | select(has(\\"webRtcUser\\") | not) | .id"',
         phones)
 
     unused_webrtc_ids = unused_webrtc_ids_str.split('\n')
@@ -49,10 +51,15 @@ def delete_unused_webrtc_phones():
         print('Successfully deleted all unused WebRTC phones.')
     else:
         print('No phones to delete.')
+    return _execute('jq -r ".entities[] | length"', phones) == PAGE_SIZE
 
 
 def main():
-    delete_unused_webrtc_phones()
+    keepPaging = True
+    page = 1
+    while keepPaging:
+        keepPaging = delete_unused_webrtc_phones(page)
+        page += 1
 
 
 if __name__ == "__main__":
