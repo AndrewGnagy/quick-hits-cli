@@ -51,7 +51,7 @@ def delete_unused_webrtc_phones(page):
         print('Successfully deleted all unused WebRTC phones.')
     else:
         print('No phones to delete.')
-    return _execute('jq -r ".entities[] | length"', phones) == PAGE_SIZE
+    return _execute('jq -r ".entities | length"', phones) == PAGE_SIZE
 
 
 def main():
