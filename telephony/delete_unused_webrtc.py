@@ -43,8 +43,8 @@ def delete_unused_webrtc_phones():
     print(f"There are {len(unused_webrtc_ids)} WebRTC phones with no active users assigned.")
 
     if len(unused_webrtc_ids) > 0:
-        print('Starting deletion of phones...')
-        for phone_id in unused_webrtc_ids:
+        print('Starting deletion of first 100 phones...')
+        for phone_id in unused_webrtc_ids[:100]:
             delete_phone(phone_id)
         print('Successfully deleted all unused WebRTC phones.')
     else:
