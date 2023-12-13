@@ -30,7 +30,7 @@ def delete_unused_webrtc_phones():
     """Delete all of the unassigned WebRTC Phones in the Genesys Cloud org"""
     
     # Query all Phones
-    phones = _execute('gc logging enable && gc telephony providers edges phones list -a --sortBy id --fields webRtcUser')
+    phones = _execute('gc telephony providers edges phones list -a --sortBy id --fields webRtcUser')
     # Perform JSON transformations using JQ
     unused_webrtc_ids_str = _execute(
         'jq -r ".[] | select(.phoneMetaBase.id == \\"inin_webrtc_softphone.json\\") | select(has(\\"webRtcUser\\") | not) | .id"',
